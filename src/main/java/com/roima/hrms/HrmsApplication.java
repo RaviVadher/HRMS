@@ -10,7 +10,7 @@ public class HrmsApplication {
 	public static void main(String[] args) {
 
 		SpringApplication.run(HrmsApplication.class, args);
-		//System.out.println(new BCryptPasswordEncoder().encode("String@2026"));
+		System.out.println(new BCryptPasswordEncoder().encode("mn@2026"));
 	}
 
 }

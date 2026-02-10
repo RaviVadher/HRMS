@@ -39,4 +39,8 @@ public class UserPrincipal implements UserDetails {
     public boolean isCredentialsNonExpired() { return true;}
     @Override
     public boolean isEnabled() { return true;}
+
+    public Long getUserId() { return getUserId();}
+
+    public User getUser() { return user; }
 }

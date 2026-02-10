@@ -38,11 +38,9 @@ public class Travel {
     @NotBlank
     private String destination;
 
-    @NotBlank(message = "start date cannot be empty")
     @Column(nullable = false)
     private LocalDate start_date;
 
-    @NotBlank(message = "end date cannot be empty")
     @Column(nullable = false)
     private LocalDate end_date;
 
@@ -50,7 +48,6 @@ public class Travel {
     @JoinColumn(name="fk_user_createdby")
     private User user;
 
-    @NotBlank(message = "end date cannot be empty")
     @Column(nullable = false)
     private LocalDate created_date;
 

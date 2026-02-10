@@ -42,10 +42,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/auth/getall").hasRole("Employee")
-                        .requestMatchers("/api/travels/**").hasRole("Hr")
+                        .requestMatchers("/api/travels/**").hasAnyRole("Employee", "Hr")
                         .requestMatchers("/api/expenses/**").hasAnyRole("Employee", "Hr")
                         .requestMatchers("/api/admin/**").hasRole("Hr")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class);

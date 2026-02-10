@@ -27,13 +27,14 @@ public class SubmittedTravelDocs {
     @JoinColumn(name="fk_assign")
     private TravelAssign travelAssign;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name ="fk_req_doc")
     private RequiredDocument requiredDocument;
 
     @ManyToOne(optional = false)
     @JoinColumn(name="fk_user_id")
     private User user;
+
 
     @NotBlank
     @Column(name="file_path")
