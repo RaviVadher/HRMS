@@ -49,4 +49,6 @@ public class TravelController {
     public List<TravelAssignResponseDto> findAllTravelsAssign(){
          return travelService.findAllTravelsAssign();
     }
+
+
 }

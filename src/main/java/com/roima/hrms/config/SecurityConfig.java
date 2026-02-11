@@ -19,7 +19,9 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtAuthFilter jwtAuthFilter;
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          JwtAuthFilter jwtAuthFilter)
+    {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtAuthFilter = jwtAuthFilter;
     }
@@ -45,7 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/travels/**").hasAnyRole("Employee", "Hr")
                         .requestMatchers("/api/expenses/**").hasAnyRole("Employee", "Hr")
                         .requestMatchers("/api/admin/**").hasRole("Hr")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class);

@@ -1,4 +1,4 @@
-package com.roima.hrms.opnjob.enums;
+package com.roima.hrms.openjob.enums;
 
 public enum ReferStatus {
     Pending,

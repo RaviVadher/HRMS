@@ -4,12 +4,16 @@ import com.roima.hrms.auth.dto.LoginRequestDTO;
 import com.roima.hrms.auth.dto.RegisterRequestDTO;
 import com.roima.hrms.auth.jwt.JwtUtil;
 import com.roima.hrms.auth.model.UserPrincipal;
+import com.roima.hrms.mail.EmailService;
+import com.roima.hrms.mail.EmailTemplate;
 import com.roima.hrms.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,11 +22,13 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final EmailService emailService;
 
-    public AuthController( AuthenticationManager authManager, JwtUtil jwtUtil, UserService userService) {
+    public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil, UserService userService, EmailService emailService) {
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/login")
@@ -48,6 +54,8 @@ public class AuthController {
 
     @GetMapping("/getall")
     public String getAllUsers() {
+
+        //emailService.sendEmail("ravivadher141@gmail.com","Travel Assigned ", EmailTemplate.travelAssigned("Ravi Vadher", "Finlend visit", LocalDate.now(),LocalDate.now().plusDays(10)));
          return "JWT workes";
     }
 }

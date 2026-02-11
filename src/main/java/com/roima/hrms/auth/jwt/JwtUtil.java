@@ -9,7 +9,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private final String SECRET_KEY = "RAVIvadher-vadherraviravivadherRAVIvadher-vadherraviravivadherRAVIvadher-vadherraviravivadher";
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 *24;
+    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
     //token generation
     public String generateToken(UserPrincipal userPrincipal) {
@@ -23,7 +23,6 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY.getBytes())
                 .build()
@@ -31,6 +30,5 @@ public class JwtUtil {
                 .getBody()
                 .getSubject();
     }
-
-
+    
 }

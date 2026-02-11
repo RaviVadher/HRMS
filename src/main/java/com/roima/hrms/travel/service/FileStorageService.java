@@ -1,5 +1,5 @@
 package com.roima.hrms.travel.service;
-import org.apache.tomcat.util.file.ConfigurationSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -30,6 +30,7 @@ public class FileStorageService {
             if(file.isEmpty()){
                 throw new RuntimeException("Empty file");
             }
+
             String extension = getExtension(file.getOriginalFilename());
             String fileName = docName+"_"+ System.currentTimeMillis()+ extension;
 
@@ -42,12 +43,9 @@ public class FileStorageService {
             Path destination = dir.resolve(fileName);
             Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
             return destination.toString();
-
         } catch(IOException e){
              throw new RuntimeException("failed to store fil",e);
         }
-
-
 
     }
 
@@ -60,13 +58,15 @@ public class FileStorageService {
                 return resource;
             }
             throw new RuntimeException("file not found");
-        }catch(MalformedURLException e)
+
+        }
+        catch(MalformedURLException e)
         {
             throw new RuntimeException("file loading errors");
         }
     }
 
-    //extract extention from file
+    //extract extension from file
     private String getExtension(String fileName){
          return fileName.substring(fileName.lastIndexOf("."));
     }

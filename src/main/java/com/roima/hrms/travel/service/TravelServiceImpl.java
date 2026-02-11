@@ -1,5 +1,7 @@
 package com.roima.hrms.travel.service;
 
+import com.roima.hrms.mail.EmailService;
+import com.roima.hrms.mail.EmailTemplate;
 import com.roima.hrms.travel.dto.TravelAssignResponseDto;
 import com.roima.hrms.travel.dto.TravelCreateRequestDto;
 import com.roima.hrms.travel.dto.TravelResponseDto;
@@ -11,8 +13,10 @@ import com.roima.hrms.travel.repository.TravelAssignRepository;
 import com.roima.hrms.travel.repository.TravelRepository;
 import com.roima.hrms.user.entity.User;
 import com.roima.hrms.user.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,20 +28,25 @@ public class TravelServiceImpl implements TravelService {
     private final TravelMapper travelMapper;
     private final UserRepository userRepository;
     private final TravelAssignRepository travelAssignRepository;
+    private final EmailService emailService;
 
-    public TravelServiceImpl(TravelRepository travelRepository, TravelMapper travelMapper,  UserRepository userRepository
-    , TravelAssignRepository travelAssignRepository) {
+
+    public TravelServiceImpl(TravelRepository travelRepository, TravelMapper travelMapper, UserRepository userRepository
+    , TravelAssignRepository travelAssignRepository, EmailService emailService) {
         this.travelRepository = travelRepository;
         this.travelMapper = travelMapper;
         this.userRepository = userRepository;
         this.travelAssignRepository = travelAssignRepository;
-
+        this.emailService = emailService;
     }
+
 
     @Override
     public TravelResponseDto createTravel(TravelCreateRequestDto dto)
     {
-        User user  =userRepository.findById(dto.getCreatedBy()).orElseThrow(()-> new RuntimeException("User not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user  =userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
         Travel travel = travelMapper.toEntity(dto);
         travel.setUser(user);
         travel.setCreated_date(LocalDate.now());
@@ -62,8 +71,9 @@ public class TravelServiceImpl implements TravelService {
         travelAssign.setTravel(travel);
         travelAssign.setUser(user);
 
+        //sending mail to assigned User
+        emailService.sendEmail(user.getEmail(),"Travel Assigned -"+ travel.getTravel_title(),EmailTemplate.travelAssigned(user.getName(),travel.getTravel_title(),travel.getStart_date(),travel.getEnd_date()));
         return travelAssignRepository.save(travelAssign);
-
     }
 
     @Override

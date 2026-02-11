@@ -1,12 +1,11 @@
-package com.roima.hrms.opnjob.entity;
+package com.roima.hrms.openjob.entity;
 
-import com.roima.hrms.opnjob.enums.JobStatus;
+import com.roima.hrms.openjob.enums.JobStatus;
 import com.roima.hrms.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity

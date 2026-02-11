@@ -20,11 +20,14 @@ public class TravelAssign {
     @Column(name="pk_assign_id")
     private Long Id;
 
+
     @ManyToOne(optional = false,fetch=FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "fk_user_assign")
     private User user;
 
     @ManyToOne(optional = false,fetch=FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "fk_travel_assign")
     private Travel travel;
 

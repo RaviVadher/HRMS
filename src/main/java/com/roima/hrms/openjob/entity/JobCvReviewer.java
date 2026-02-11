@@ -1,9 +1,8 @@
-package com.roima.hrms.opnjob.entity;
+package com.roima.hrms.openjob.entity;
 
 import com.roima.hrms.user.entity.User;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity

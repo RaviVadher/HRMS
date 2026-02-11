@@ -6,10 +6,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
 @Table(name="expenses")
 public class Expense {
@@ -42,18 +46,14 @@ public class Expense {
     @JoinColumn(name = "fk_user_actionby")
     private User actionBy;
 
-    @NotBlank
-    private LocalDate submited_date;
 
-    @NotBlank
+    private LocalDate submited_date=LocalDate.now();
+
+
     private LocalDate reviewed_date;
 
     @Column
     private String hr_remarks;
 
-    public void approve()
-    {
-        this.expense_status =ExpenseStatus.Approved;
-    }
 
 }

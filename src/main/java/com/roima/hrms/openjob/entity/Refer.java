@@ -1,6 +1,6 @@
-package com.roima.hrms.opnjob.entity;
+package com.roima.hrms.openjob.entity;
 
-import com.roima.hrms.opnjob.enums.ReferStatus;
+import com.roima.hrms.openjob.enums.ReferStatus;
 import com.roima.hrms.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

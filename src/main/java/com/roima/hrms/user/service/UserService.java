@@ -30,14 +30,12 @@ public class UserService {
 
         }
 
-
         User user = new User();
         user.setName(registerRequestDTO.getName());
         user.setEmail(registerRequestDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
         user.setRole(registerRequestDTO.getRole());
         return userRepository.save(user);
-
     }
 
     //find existing user by mail

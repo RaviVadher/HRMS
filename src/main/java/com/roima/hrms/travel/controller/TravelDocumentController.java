@@ -1,9 +1,7 @@
 package com.roima.hrms.travel.controller;
 
 import com.roima.hrms.travel.dto.RequiredTravelDocumentRequestDto;
-import com.roima.hrms.travel.dto.RequiredTravelDocumentResponseDto;
 import com.roima.hrms.travel.entity.RequiredDocument;
-import com.roima.hrms.travel.repository.RequiredDocumentRepository;
 import com.roima.hrms.travel.service.TravelDocumentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

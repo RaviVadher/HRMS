@@ -8,9 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class HrmsApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(HrmsApplication.class, args);
-		System.out.println(new BCryptPasswordEncoder().encode("mn@2026"));
 	}
-
 }
