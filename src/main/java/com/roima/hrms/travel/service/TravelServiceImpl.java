@@ -29,15 +29,17 @@ public class TravelServiceImpl implements TravelService {
     private final UserRepository userRepository;
     private final TravelAssignRepository travelAssignRepository;
     private final EmailService emailService;
+    private final AssignMapper assignMapper;
 
 
     public TravelServiceImpl(TravelRepository travelRepository, TravelMapper travelMapper, UserRepository userRepository
-    , TravelAssignRepository travelAssignRepository, EmailService emailService) {
+    , TravelAssignRepository travelAssignRepository, EmailService emailService, AssignMapper assignMapper) {
         this.travelRepository = travelRepository;
         this.travelMapper = travelMapper;
         this.userRepository = userRepository;
         this.travelAssignRepository = travelAssignRepository;
         this.emailService = emailService;
+        this.assignMapper = assignMapper;
     }
 
 
@@ -62,6 +64,13 @@ public class TravelServiceImpl implements TravelService {
                 .toList();
     }
 
+    @Override
+    public TravelResponseDto findTravelById(Long travelId)
+    {
+        Travel travel = travelRepository.findById(travelId).orElseThrow(() -> new RuntimeException("travel not found"));
+        return travelMapper.toDto(travel);
+    }
+
     public TravelAssign assignTravel(Long travelId,Long userId)
     {
         User user  =userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
@@ -70,6 +79,8 @@ public class TravelServiceImpl implements TravelService {
         TravelAssign travelAssign = new TravelAssign();
         travelAssign.setTravel(travel);
         travelAssign.setUser(user);
+        travelAssign.setAssignedDate(LocalDate.now());
+
 
         //sending mail to assigned User
         emailService.sendEmail(user.getEmail(),"Travel Assigned -"+ travel.getTravel_title(),EmailTemplate.travelAssigned(user.getName(),travel.getTravel_title(),travel.getStart_date(),travel.getEnd_date()));
@@ -77,11 +88,35 @@ public class TravelServiceImpl implements TravelService {
     }
 
     @Override
-    public  List<TravelAssignResponseDto> findAllTravelsAssign()
+    public  List<TravelAssignResponseDto> findAllTravelsAssign(Long travelId)
     {
-        return travelAssignRepository.findAll()
+        return travelAssignRepository.findByTravel_id(travelId)
                 .stream()
                 .map(AssignMapper::toDto)
                 .toList();
     }
+
+
+    @Override
+    public  List<TravelAssignResponseDto> findMyTravelsAssign()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user  =userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        return travelAssignRepository.findByUser_id(user.getId())
+                .stream()
+                .map(AssignMapper::myTravel)
+                .toList();
+    }
+
+    @Override
+    public  TravelAssignResponseDto findMyTravelsAssign(Long assignId)
+    {
+        TravelAssign dto = travelAssignRepository.findById(assignId).orElseThrow(()-> new RuntimeException("assin not found"));
+
+        return assignMapper.myTravel(dto);
+
+    }
+
+
 }

@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -51,31 +52,31 @@ public class ExpenseServiceImpl implements ExpenseService{
     }
 
     @Override
-    public ExpenseResponseDto createExpense(Long travelId,ExpenseCreateRequestDto dto, MultipartFile file)
+    public ExpenseResponseDto createExpense(Long travel_id, Long assignId, String category, BigDecimal amount, LocalDate date, MultipartFile file)
     {
         Expense expense = new Expense();
         ExpenseProof expenseProof = new ExpenseProof();
 
         LocalDate entryDate = LocalDate.now();
-        LocalDate start_date = travelRepository.findById(travelId).get().getStart_date();
-        LocalDate end_date = travelRepository.findById(travelId).get().getEnd_date();
+        LocalDate start_date = travelRepository.findById(travel_id).get().getStart_date();
+        LocalDate end_date = travelRepository.findById(travel_id).get().getEnd_date();
 
         if(!entryDate.isAfter(start_date) || entryDate.isAfter(end_date.plusDays(10))){
 
             throw new RuntimeException("Currently Expense submission is not allowed");
         }
 
-        TravelAssign assign = travelAssignRepository.findById(dto.getAssignId()).orElseThrow(()->new RuntimeException("Invelid travel assign"));
+        TravelAssign assign = travelAssignRepository.findById(assignId).orElseThrow(()->new RuntimeException("Invelid travel assign"));
         expense.setAssign(assign);
-        expense.setExpense_date(dto.getExpenseDate());
-        expense.setExpense_amount(dto.getAmount());
-        expense.setCategory(dto.getCategory());
+        expense.setExpense_date(date);
+        expense.setExpense_amount(amount);
+        expense.setCategory(category);
         expense.setExpense_status(ExpenseStatus.Submitted);
 
         expenseRepository.save(expense);
         String path = fileStorageService.store(
                 file,
-                travelId,
+                travel_id,
                 assign.getUser().getId(),
                 "expense"
         );
@@ -89,15 +90,16 @@ public class ExpenseServiceImpl implements ExpenseService{
     }
 
     @Override
-    public List<ExpenseResponseDto> getExpenseDetail(Long travelId,Long assignId) {
-        return expenseRepository.findAllByAssign_id(assignId)
-                .stream()
+    public List<ExpenseResponseDto> getExpenseDetail(Long assignId) {
+        List<Expense> expenses= expenseRepository.findAllByAssignIdWithProofs(assignId);
+
+               return expenses.stream()
                 .map(ExpenseMapper::toDto)
                 .toList();
     }
 
     @Override
-    public ExpenseResponseDto changeStatus(Long travelId, Long expenseId, ChangeExpenseStatusDto dto){
+    public ExpenseResponseDto changeStatus(Long expenseId, ChangeExpenseStatusDto dto){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

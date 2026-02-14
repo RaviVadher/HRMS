@@ -1,4 +1,4 @@
-package com.roima.hrms.openapi;
+package com.roima.hrms.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

@@ -1,4 +1,5 @@
 package com.roima.hrms.travel.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.roima.hrms.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -24,12 +25,12 @@ public class SubmittedTravelDocs {
     private Long Id;
 
     @ManyToOne(optional = false)
+    @JsonIgnore
     @JoinColumn(name="fk_assign")
     private TravelAssign travelAssign;
 
-    @ManyToOne
-    @JoinColumn(name ="fk_req_doc")
-    private RequiredDocument requiredDocument;
+    @Column
+    private String documentName;
 
     @ManyToOne(optional = false)
     @JoinColumn(name="fk_user_id")

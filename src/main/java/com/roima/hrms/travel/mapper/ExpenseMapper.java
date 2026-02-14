@@ -1,8 +1,12 @@
 package com.roima.hrms.travel.mapper;
 
+import com.roima.hrms.travel.dto.ExpenseProofResponseDto;
 import com.roima.hrms.travel.dto.ExpenseResponseDto;
 import com.roima.hrms.travel.entity.Expense;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ExpenseMapper {
@@ -15,9 +19,27 @@ public class ExpenseMapper {
         dto.setAmount(expense.getExpense_amount());
         dto.setExpenseDate(expense.getExpense_date());
         dto.setStatus(expense.getExpense_status());
-        //dto.setReviewedDate(expense.getReviewed_date());
-        //dto.setHrRemark(expense.getHr_remarks());
-        //dto.setReviewerId(expense.getActionBy().getId());
+
+        if(expense.getActionBy()!=null){
+            dto.setReviewerId(expense.getActionBy().getId());
+            dto.setReviewedDate(expense.getReviewed_date());
+            dto.setHrRemark(expense.getHr_remarks());
+        }
+
+        if(expense.getExpensesProof()!=null){
+
+            List<ExpenseProofResponseDto> downloadsUrl = expense.getExpensesProof()
+                    .stream()
+                    .map(proof -> {
+                        ExpenseProofResponseDto prf = new ExpenseProofResponseDto();
+                        prf.setProofId(proof.getId());
+                        prf.setDownloadsUrl("/api/expense/proof/"+proof.getId());
+
+                        return prf;
+                    })
+                    .toList();
+            dto.setProofs(downloadsUrl);
+        }
 
         return dto;
     }

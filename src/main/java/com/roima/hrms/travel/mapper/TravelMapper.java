@@ -30,6 +30,7 @@ public class TravelMapper {
         dto.setDestination(travel.getDestination());
         dto.setOrigin(travel.getOrigin());
         dto.setCreatedBy(travel.getUser().getId());
+        dto.setTravelId(travel.getId());
         return dto;
     }
 }

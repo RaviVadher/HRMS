@@ -2,12 +2,17 @@ package com.roima.hrms.user.service;
 
 import com.roima.hrms.auth.dto.LoginRequestDTO;
 import com.roima.hrms.auth.dto.RegisterRequestDTO;
+import com.roima.hrms.user.dto.UserMapper;
+import com.roima.hrms.user.dto.UserResponceDto;
 import com.roima.hrms.user.entity.Role;
 import com.roima.hrms.user.entity.User;
 import com.roima.hrms.user.repository.RoleRepository;
 import com.roima.hrms.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -41,5 +46,12 @@ public class UserService {
     //find existing user by mail
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(()-> new IllegalArgumentException("User not found"));
+    }
+
+    public List<UserResponceDto> getAllUser() {
+         return userRepository.findAll() .stream()
+                .map(UserMapper::toDto)
+                .toList();
+
     }
 }

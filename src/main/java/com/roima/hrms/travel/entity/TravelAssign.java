@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.sql.results.graph.Fetch;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
@@ -20,6 +21,7 @@ public class TravelAssign {
     @Column(name="pk_assign_id")
     private Long Id;
 
+    LocalDate assignedDate;
 
     @ManyToOne(optional = false,fetch=FetchType.LAZY)
     @JsonIgnore

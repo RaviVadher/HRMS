@@ -1,9 +1,13 @@
 package com.roima.hrms.travel.service;
+import com.roima.hrms.auth.model.UserPrincipal;
 import com.roima.hrms.travel.dto.RequiredTravelDocumentRequestDto;
+import com.roima.hrms.travel.dto.SubmitedDocumentDto;
 import com.roima.hrms.travel.entity.RequiredDocument;
 import com.roima.hrms.travel.entity.SubmittedTravelDocs;
 import com.roima.hrms.travel.entity.Travel;
 import com.roima.hrms.travel.entity.TravelAssign;
+import com.roima.hrms.travel.mapper.DocumentMapper;
+import com.roima.hrms.travel.mapper.ExpenseMapper;
 import com.roima.hrms.travel.repository.RequiredDocumentRepository;
 import com.roima.hrms.travel.repository.SubmittedTravelDocumentRepository;
 import com.roima.hrms.travel.repository.TravelAssignRepository;
@@ -11,6 +15,9 @@ import com.roima.hrms.travel.repository.TravelRepository;
 import com.roima.hrms.user.entity.User;
 import com.roima.hrms.user.repository.UserRepository;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,25 +49,25 @@ public class TravelDocumentServiceImpl implements TravelDocumentService {
 
 
     @Override
-    public void uploadDocument(Long travelId, Long requiredDocId, MultipartFile file,Long userId,String filetype) {
-//        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
+    public void uploadDocument(Long assignedId,String documentName, MultipartFile file,String filetype) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        TravelAssign travelAssign = travelAssignRepository.findByUser_idAndTravel_id(userId, travelId).orElseThrow(() -> new RuntimeException("travel not assigned"));
-        RequiredDocument requiredDocument = requiredDocumentRepository.findById(requiredDocId).orElseThrow(() -> new RuntimeException("required document not found"));
+        TravelAssign travelAssign = travelAssignRepository.findById(assignedId).orElseThrow(() -> new RuntimeException("required travel assign not found"));;
+       // TravelAssign travelAssign = travelAssignRepository.findByUser_idAndTravel_id(userPrincipal.getUserId(), travelId).orElseThrow(() -> new RuntimeException("travel not assigned"));
+        //RequiredDocument requiredDocument = requiredDocumentRepository.findById(requiredDocId).orElseThrow(() -> new RuntimeException("required document not found"));
 
         String path = fileStorageService.store(
                 file,
-                travelId,
+                assignedId,
                 travelAssign.getUser().getId(),
-                requiredDocument.getDoc_name()
+                documentName
         );
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("user not found"));
+        User user = userRepository.findById(userPrincipal.getUserId()).orElseThrow(() -> new RuntimeException("user not found"));
         SubmittedTravelDocs doc = new SubmittedTravelDocs();
         doc.setTravelAssign(travelAssign);
-        doc.setRequiredDocument(requiredDocument);
+        doc.setDocumentName(documentName);
         doc.setFilepath(path);
         doc.setUser(user);
         doc.setFiletype(filetype);
@@ -100,5 +107,14 @@ public class TravelDocumentServiceImpl implements TravelDocumentService {
     public List<RequiredDocument> getDocument(Long travelId) {
         List<RequiredDocument> list = requiredDocumentRepository.findByTravel_Id(travelId);
         return list;
+    }
+
+    @Override
+    public List<SubmitedDocumentDto> findByAssigned_id(Long assignedId) {
+           List<SubmittedTravelDocs> docs =submittedTravelDocumentRepository.findByTravelAssign_id(assignedId);
+        return docs.stream()
+                .map(DocumentMapper::toDto)
+                .toList();
+
     }
 }

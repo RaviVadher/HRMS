@@ -11,6 +11,7 @@ import java.time.LocalTime;
 @Setter
 public class TravelResponseDto {
 
+    private Long travelId;
     private String title;
     private String description;
     private LocalDate startDate;

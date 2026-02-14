@@ -5,11 +5,13 @@ import com.roima.hrms.travel.dto.ExpenseCreateRequestDto;
 import com.roima.hrms.travel.dto.ExpenseResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ExpenseService {
 
-    ExpenseResponseDto createExpense(Long travelId,ExpenseCreateRequestDto dto, MultipartFile file);
-    List<ExpenseResponseDto> getExpenseDetail(Long travelId,Long assignId);
-    ExpenseResponseDto changeStatus(Long travelId, Long expenseId, ChangeExpenseStatusDto dto);
+    ExpenseResponseDto createExpense(Long travel_id, Long assignId, String category, BigDecimal amount, LocalDate date, MultipartFile file);
+    List<ExpenseResponseDto> getExpenseDetail(Long assignId);
+    ExpenseResponseDto changeStatus( Long expenseId, ChangeExpenseStatusDto dto);
 }

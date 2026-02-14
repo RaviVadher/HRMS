@@ -7,4 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SubmittedTravelDocumentRepository extends JpaRepository<SubmittedTravelDocs,Long> {
+    List<SubmittedTravelDocs> findByTravelAssign_id(Long assignId);
+
 }

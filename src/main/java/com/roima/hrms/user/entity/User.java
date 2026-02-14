@@ -1,5 +1,6 @@
 package com.roima.hrms.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,7 @@ public class User {
 
     @ManyToOne(optional = false)
     @JoinColumn(name="fk_role_id")
+    @JsonIgnore
     private Role role;
 
     @Column(nullable = false)

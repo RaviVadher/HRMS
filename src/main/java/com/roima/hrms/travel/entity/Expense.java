@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -46,6 +47,8 @@ public class Expense {
     @JoinColumn(name = "fk_user_actionby")
     private User actionBy;
 
+    @OneToMany(mappedBy = "expense",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<ExpenseProof> expensesProof;
 
     private LocalDate submited_date=LocalDate.now();
 

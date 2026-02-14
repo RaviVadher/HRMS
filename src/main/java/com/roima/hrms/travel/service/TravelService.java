@@ -11,6 +11,11 @@ public interface TravelService {
 
     TravelResponseDto createTravel(TravelCreateRequestDto dto);
     List<TravelResponseDto> findAllTravels();
+    TravelResponseDto findTravelById(Long travelId);
     TravelAssign assignTravel(Long travelId,Long userId);
-    List<TravelAssignResponseDto> findAllTravelsAssign();
+    List<TravelAssignResponseDto> findAllTravelsAssign(Long travelId);
+    List<TravelAssignResponseDto> findMyTravelsAssign();
+    TravelAssignResponseDto findMyTravelsAssign(Long assignId);
+
+
 }

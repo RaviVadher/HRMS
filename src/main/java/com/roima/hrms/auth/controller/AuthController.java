@@ -6,6 +6,8 @@ import com.roima.hrms.auth.jwt.JwtUtil;
 import com.roima.hrms.auth.model.UserPrincipal;
 import com.roima.hrms.mail.EmailService;
 import com.roima.hrms.mail.EmailTemplate;
+import com.roima.hrms.user.dto.UserResponceDto;
+import com.roima.hrms.user.entity.User;
 import com.roima.hrms.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,9 +16,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     private final AuthenticationManager authManager;
@@ -52,10 +56,8 @@ public class AuthController {
         return ResponseEntity.ok("user register successfully");
     }
 
-    @GetMapping("/getall")
-    public String getAllUsers() {
-
-        //emailService.sendEmail("ravivadher141@gmail.com","Travel Assigned ", EmailTemplate.travelAssigned("Ravi Vadher", "Finlend visit", LocalDate.now(),LocalDate.now().plusDays(10)));
-         return "JWT workes";
+    @GetMapping("/getEmployee")
+    public List<UserResponceDto> getAllUsers() {
+         return userService.getAllUser();
     }
 }
